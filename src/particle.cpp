@@ -39,17 +39,17 @@ void Particle::PrintParticleTypes() {
 }
 
 double Particle::TotalEnergy() const {
-  const auto p = std::sqrt(fPx * fPx + fPy * fPy + fPz * fPz);
+  const auto p = std::hypot(fPx, fPy, fPz);
   const auto m = GetMass();
-  return std::hypot(m * m, p * p);
+  return std::hypot(m, p);
 }
 
 double Particle::InvMass(Particle const& p) const {
-  const auto eSummedSquared = std::pow(TotalEnergy() + p.TotalEnergy(), 2);
+  const auto eSumSquared = std::pow(TotalEnergy() + p.TotalEnergy(), 2);
   const auto pX = fPx + p.GetPulseX(), pY = fPy + p.GetPulseY(),
              pZ = fPz + p.GetPulseZ();
   const auto pulseSquared = pX * pX + pY * pY + pZ * pZ;
-  return std::sqrt(eSummedSquared - pulseSquared);
+  return std::sqrt(eSumSquared - pulseSquared);
 }
 
 void Particle::Print() const {
