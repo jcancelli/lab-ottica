@@ -22,8 +22,10 @@ void Particle::AddParticleType(std::string name, double mass, int charge,
     }
     index = fNParticleType;
     fNParticleType++;
+    std::cout << "Adding new particle type named: \"" << name << "\"\n";
   } else {
     delete fParticleTypes[index];
+    std::cout << "Editing particle type named: \"" << name << "\"\n";
   }
   fParticleTypes[index] = width == 0.0
                               ? new ParticleType(name, mass, charge)
