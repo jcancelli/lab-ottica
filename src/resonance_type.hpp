@@ -1,4 +1,5 @@
 #pragma once
+
 #include "particle_type.hpp"
 
 class ResonanceType : public ParticleType {
@@ -9,5 +10,5 @@ class ResonanceType : public ParticleType {
   ResonanceType(std::string name, double mass, int charge, double width);
   virtual ~ResonanceType();
   virtual void Print() const;
-  double GetWidth() const;
+  virtual double GetWidth() const;
 };
