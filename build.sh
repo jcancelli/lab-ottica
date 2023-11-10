@@ -1,7 +1,7 @@
 #!/bin/bash
 OUT_DIR=out
 
-COMPILER_ARGS=$(root-config --cflags --libs)
+COMPILER_ARGS="$(root-config --cflags --libs) -Wall -Wextra"
 ROOT_INCLUDE=$ROOTSYS/include
 
 SRC_FILES="\
