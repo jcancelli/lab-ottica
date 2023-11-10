@@ -29,7 +29,7 @@ elif [ "$1" == "build-test" ]
 then
 	g++ -o $TEST_BIN $SRC_FILES $TEST $COMPILER_ARGS
 else
-	echo "Synthax: ./build.sh <run|test>"
+	echo "Synthax: ./build.sh <run|test|build|build-test>"
 	echo ""
 	echo run - Build and run main program
 	echo build - Build main program
