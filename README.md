@@ -5,7 +5,7 @@
 
 ## Build commands
 
-| Command            | Description           |
-|--------------------| ----------------------|
-|`make test`         | Compile and run tests |
-|`make build-tests`  | Compile  tests        |
+| Command            | Description                  |
+|--------------------|------------------------------|
+|`./build.sh test`   | Compile and run tests        |
+|`./build.sh run`    | Compile and run main program |
