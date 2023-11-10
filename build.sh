@@ -15,7 +15,7 @@ TEST_BIN=$OUT_DIR/test
 TARGET_BIN=$OUT_DIR/main
 
 
-if [ "$1" == "run" ]
+if [ "$1" == "run" ] || [ $# -eq 0 ]
 then
 	g++ -I$ROOT_INCLUDE -o $TARGET_BIN $SRC_FILES $MAIN $COMPILER_ARGS
 	./${TARGET_BIN}
@@ -23,4 +23,10 @@ elif [ "$1" == "test" ]
 then
 	g++ -I$ROOT_INCLUDE -o $TEST_BIN $SRC_FILES $TEST $COMPILER_ARGS
 	./${TEST_BIN}
+elif [ "$1" == "-h" ] || [ $# -gt 1 ]
+then
+	echo "Synthax: ./build.sh <run|test>"
+	echo ""
+	echo run - Build and run main program
+	echo test - Build and run tests
 fi
