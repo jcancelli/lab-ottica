@@ -1,4 +1,5 @@
 #pragma once
+
 #include <string>
 
 #include "particle_type.hpp"
@@ -13,14 +14,20 @@ class Particle {
   double fPx, fPy, fPz;
 
  public:
+  static const int INVALID_TYPE = -1;
+
+ public:
+  Particle();
   Particle(std::string name, double fPx = 0.0, double fPy = 0.0,
            double fPz = 0.0);
-  static void AddParticleType(std::string name, double mass, int charge,
-                              double width = 0.0);
+  static int AddParticleType(std::string name, double mass, int charge,
+                             double width = 0.0);
   static void PrintParticleTypes();
+  int Decay2body(Particle& dau1, Particle& dau2) const;
   double TotalEnergy() const;
   double InvMass(Particle const& p) const;
   void Print() const;
+  bool IsOfValidType() const;
   int GetParticleType() const;
   void SetParticleType(std::string name);
   void SetParticleType(int index);
@@ -29,7 +36,9 @@ class Particle {
   int GetPulseZ() const;
   void SetP(double x, double y, double z);
   double GetMass() const;
+  double GetCharge() const;
 
  private:
   static int FindParticle(std::string const& name);
+  void Boost(double bx, double by, double bz);
 };
