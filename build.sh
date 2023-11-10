@@ -23,8 +23,7 @@ elif [ "$1" == "test" ]
 then
 	g++ -I$ROOT_INCLUDE -o $TEST_BIN $SRC_FILES $TEST $COMPILER_ARGS
 	./${TEST_BIN}
-elif [ "$1" == "-h" ] || [ $# -gt 1 ]
-then
+else
 	echo "Synthax: ./build.sh <run|test>"
 	echo ""
 	echo run - Build and run main program
