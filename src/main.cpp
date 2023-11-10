@@ -49,6 +49,7 @@ int main() {
   invMassPioneKaoneConcordantDist.Sumw2();
   invMassSibDecayDist.Sumw2();
 
+  std::cout << "Running simulation\n";
   for (int i = 0; i < N_EVENTS; i++) {
     while (eventParticles.size() <= N_PARTICLES) {
       phi = gRandom->Uniform(0., PI2);
@@ -89,7 +90,6 @@ int main() {
 
     // fill histos
     const int n = eventParticles.size();
-    double eventInvMass = 0.0;
     for (int i = 0; i < n; i++) {
       const auto& a = eventParticles[i];
       for (int j = i + 1; i < n; i++) {
@@ -125,7 +125,22 @@ int main() {
   // save histos to file
   std::cout << "Saving to file\n";
   TFile saveFile("histos.root", "RECREATE");
-  saveFile.Write();
+
+  particleTypesHisto.Write("particle-types-distribution");
+  zenithDist.Write("zenith-distribution");
+  azimuthDist.Write("azimuth-distribution");
+  pulseDist.Write("pulse-distribution");
+  traversePulseDist.Write("traverse-pulse-distribution");
+  particleEnergyDist.Write("particle-energy-distribution");
+  invMassDist.Write("inverted-mass-distribution");
+  invMassDiffChargeDist.Write("inverted-mass-discordant-charge-distribution");
+  invMassSameChargeDist.Write("inverted-mass-concordant-charge-distribution");
+  invMassPioneKaoneDiscordantDist.Write(
+      "inverted-mass-discordant-charge-pione-kaone-distribution");
+  invMassPioneKaoneConcordantDist.Write(
+      "inverted-mass-discordant-charge-pione-kaone-distribution");
+  invMassSibDecayDist.Write("inverted-mass-siblings-distribution");
+
   saveFile.Close();
 }
 
