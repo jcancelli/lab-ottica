@@ -32,15 +32,23 @@ int main() {
   std::vector<Particle> eventParticles;
   double phi, theta, pulse;
   double px, py, pz;
-  TH1D particleTypesHisto;
-  TH1D zenithDist, azimuthDist;
-  TH1D pulseDist, traversePulseDist, particleEnergyDist;
-  TH1D invMassDist;
+  TH1D particleTypesHisto("particle-types-distribution",
+                          "Particle types distribution", 10, -1, 10);
+  TH1D zenithDist("zenith-distribution", "Zenith distribution", 180, 0., M_PI),
+      azimuthDist("azimuth-distribution", "Azimuth distribution", 360, 0., PI2);
+  TH1D pulseDist("pulse-distribution", "Pulse distribution", 100, 0, 11),
+      traversePulseDist("traverse-pulse-distribution",
+                        "Traverse pulse distribution", 100, 0., 10.),
+      particleEnergyDist("particle-energy-distribution",
+                         "Particle energy distribution", 100, 0., 10.);
+  TH1D invMassDist("invariant-mass-distribution", "Invariant mass distribution",
+                   40, 0, 10);
   TH1D invMassDiffChargeDist;
   TH1D invMassSameChargeDist;
   TH1D invMassPioneKaoneDiscordantDist;
   TH1D invMassPioneKaoneConcordantDist;
-  TH1D invMassSibDecayDist;
+  TH1D invMassSibDecayDist("invariant-mass-siblings-distribution",
+                           "Invariant mass siblings distribution", 100, 0, 7);
 
   invMassDist.Sumw2();
   invMassDiffChargeDist.Sumw2();
@@ -132,14 +140,14 @@ int main() {
   pulseDist.Write("pulse-distribution");
   traversePulseDist.Write("traverse-pulse-distribution");
   particleEnergyDist.Write("particle-energy-distribution");
-  invMassDist.Write("inverted-mass-distribution");
-  invMassDiffChargeDist.Write("inverted-mass-discordant-charge-distribution");
-  invMassSameChargeDist.Write("inverted-mass-concordant-charge-distribution");
+  invMassDist.Write("invariant-mass-distribution");
+  invMassDiffChargeDist.Write("invariant-mass-discordant-charge-distribution");
+  invMassSameChargeDist.Write("invariant-mass-concordant-charge-distribution");
   invMassPioneKaoneDiscordantDist.Write(
-      "inverted-mass-discordant-charge-pione-kaone-distribution");
+      "invariant-mass-discordant-charge-pione-kaone-distribution");
   invMassPioneKaoneConcordantDist.Write(
-      "inverted-mass-discordant-charge-pione-kaone-distribution");
-  invMassSibDecayDist.Write("inverted-mass-siblings-distribution");
+      "invariant-mass-discordant-charge-pione-kaone-distribution");
+  invMassSibDecayDist.Write("invariant-mass-siblings-distribution");
 
   saveFile.Close();
 }

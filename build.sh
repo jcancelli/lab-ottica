@@ -7,14 +7,14 @@ SRC_FILES="\
 	src/particle_type.cpp \
 	src/resonance_type.cpp \
 	src/particle.cpp"
-MAIN=src/main.cpp
+SIMULATION=src/simulation.cpp
 TEST=src/test.cpp
 
 TEST_BIN=$OUT_DIR/test
-TARGET_BIN=$OUT_DIR/main
+SIMULATION_BIN=$OUT_DIR/simulation
 
-function build() {
-	g++ -o $TARGET_BIN $SRC_FILES $MAIN $COMPILER_ARGS
+function build-simulation() {
+	g++ -o $SIMULATION_BIN $SRC_FILES $SIMULATION $COMPILER_ARGS
 }
 
 function build-test() {
@@ -22,21 +22,21 @@ function build-test() {
 }
 
 function help() {
-	echo "Synthax: ./build.sh <run|test|build|build-test>"
+	echo "Synthax: ./build.sh <simulation|test|build-simulation|build-test>"
 	echo ""
-	echo run - Build and run main program
-	echo build - Build main program
+	echo simulation - Build and run simulation
+	echo build-simulation - Build main program
 	echo test - Build and run tests
 	echo build-test - Build tests
 }
 
-if [ "$1" == "run" ] || [ $# -eq 0 ]
+if [ "$1" == "simulation" ] || [ $# -eq 0 ]
 then
-	$(build) \
-	&& ./${TARGET_BIN}
-elif [ "$1" == "build" ]
+	$(build-simulation) \
+	&& ./${SIMULATION_BIN}
+elif [ "$1" == "build-simulation" ]
 then
-	$(build)
+	$(build-simulation)
 elif [ "$1" == "test" ]
 then
 	$(build-test) \
