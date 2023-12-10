@@ -1,0 +1,2 @@
+#define N_EVENTS 1E5
+#define N_PARTICLES 100

@@ -7,12 +7,10 @@
 #include <string>
 #include <vector>
 
+#include "constants.hpp"
 #include "particle.hpp"
 #include "particle_type.hpp"
 #include "resonance_type.hpp"
-
-#define N_EVENTS 1E5
-#define N_PARTICLES 100
 
 const double PI2 = 2 * M_PI;
 
@@ -131,9 +129,9 @@ int main() {
 
     // fill histos
     const int n = eventParticles.size();
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n - 1; i++) {
       const auto& a = eventParticles[i];
-      for (int j = i + 1; i < n; i++) {
+      for (int j = i + 1; j < n; j++) {
         const auto& b = eventParticles[j];
 
         // compute invariant mass
