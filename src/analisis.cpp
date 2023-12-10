@@ -79,26 +79,33 @@ void checkHistosEntries() {
     invMassEntries += N_PARTICLES - i;
   }
   invMassEntries *= N_EVENTS;
-  std::cout << "Checking histograms entries\n";
-  std::cout << "HISTO\t\tEXPECTED ENTRIES\t\tACTUAL ENTRIES\n";
-  std::cout << "particle-types\t\t" << (N_EVENTS * N_PARTICLES) << "\t\t"
-            << particleTypesHisto->GetEntries() << "\n";
-  std::cout << "zenith\t\t" << (N_EVENTS * N_PARTICLES) << "\t\t"
+  std::cout << "Checking histograms entries-------\n";
+  std::cout << "HISTO\t\t\t\t\t\tEXPECTED\t\tACTUAL\n";
+  std::cout << "particle-types\t\t\t\t\t" << (N_EVENTS * N_PARTICLES)
+            << "\t\t\t" << particleTypesHisto->GetEntries() << "\n";
+  std::cout << "zenith\t\t\t\t\t\t" << (N_EVENTS * N_PARTICLES) << "\t\t\t"
             << zenithDist->GetEntries() << "\n";
-  std::cout << "azimuth\t\t" << (N_EVENTS * N_PARTICLES) << "\t\t"
+  std::cout << "azimuth\t\t\t\t\t\t" << (N_EVENTS * N_PARTICLES) << "\t\t\t"
             << azimuthDist->GetEntries() << "\n";
-  std::cout << "pulse\t\t" << (N_EVENTS * N_PARTICLES) << "\t\t"
+  std::cout << "pulse\t\t\t\t\t\t" << (N_EVENTS * N_PARTICLES) << "\t\t\t"
             << pulseDist->GetEntries() << "\n";
-  std::cout << "traverse-pulse\t\t" << (N_EVENTS * N_PARTICLES) << "\t\t"
-            << traversePulseDist->GetEntries() << "\n";
-  std::cout << "particle-energy\t\t" << (N_EVENTS * N_PARTICLES) << "\t\t"
-            << particleEnergyDist->GetEntries() << "\n";
-  std::cout << "invariant-mass\t\t" << invMassEntries << "\t\t"
+  std::cout << "traverse-pulse\t\t\t\t\t" << (N_EVENTS * N_PARTICLES)
+            << "\t\t\t" << traversePulseDist->GetEntries() << "\n";
+  std::cout << "particle-energy\t\t\t\t\t" << (N_EVENTS * N_PARTICLES)
+            << "\t\t\t" << particleEnergyDist->GetEntries() << "\n";
+  std::cout << "invariant-mass\t\t\t\t\t" << invMassEntries << "\t\t"
             << invMassDist->GetEntries() << "\n";
+  std::cout << "invariant-mass-discordant-charge\t\t" << (invMassEntries / 2)
+            << "\t\t" << invMassDiffChargeDist->GetEntries() << "\n";
+  std::cout << "invariant-mass-concordant-charge\t\t" << (invMassEntries / 2)
+            << "\t\t" << invMassSameChargeDist->GetEntries() << "\n";
 
-  //    invMassDiffChargeDist; invMassSameChargeDist,
-  //    invMassPioneKaoneDiscordantDist; invMassPioneKaoneConcordantDist,
-  //    invMassSibDecayDist;
+  std::cout << "invariant-mass-pione-kaone-discordant-charge\t"
+            << invMassPioneKaoneDiscordantDist->GetEntries() << "\n";
+  std::cout << "invariant-mass-pione-kaone-concordant-charge\t"
+            << invMassPioneKaoneConcordantDist->GetEntries() << "\n";
+  std::cout << "invariant-mass-siblings\t\t\t\t"
+            << invMassSibDecayDist->GetEntries() << "\n";
 }
 
 void checkParticleTypesDistribution() {
@@ -106,19 +113,20 @@ void checkParticleTypesDistribution() {
   const auto computeBinPercentage = [](int binIndex, TH1D* dist) {
     return dist->GetBinContent(binIndex) / dist->GetEntries() * 100;
   };
-  std::cout << "Expected PIONE+ probability: 40%\tFound: "
+  std::cout << "PARTICLE\tEXPECTED\tACTUAL\n";
+  std::cout << "PIONE+\t\t40%\t\t"
             << computeBinPercentage(PIONE_P, particleTypesHisto) << "%\n";
-  std::cout << "Expected PIONE- probability: 40%\tFound: "
+  std::cout << "PIONE-\t\t40%\t\t"
             << computeBinPercentage(PIONE_N, particleTypesHisto) << "%\n";
-  std::cout << "Expected KAONE+ probability: 5% \tFound: "
+  std::cout << "KAONE+\t\t5%\t\t"
             << computeBinPercentage(KAONE_P, particleTypesHisto) << "%\n";
-  std::cout << "Expected KAONE- probability: 5% \tFound: "
+  std::cout << "KAONE-\t\t5%\t\t"
             << computeBinPercentage(KAONE_N, particleTypesHisto) << "%\n";
-  std::cout << "Expected PROTONE+ probability: 4.5%\tFound: "
+  std::cout << "PROTONE+\t4.5%\t\t"
             << computeBinPercentage(PROTONE_P, particleTypesHisto) << "%\n";
-  std::cout << "Expected PROTONE- probability: 4.5%\tFound: "
+  std::cout << "PROTONE-\t4.5%\t\t"
             << computeBinPercentage(PROTONE_N, particleTypesHisto) << "%\n";
-  std::cout << "Expected K* probability: 1% \t\tFound: "
+  std::cout << "K*\t\t1%\t\t"
             << computeBinPercentage(K_STAR, particleTypesHisto) << "%\n";
 }
 
@@ -133,8 +141,4 @@ bool checkFit(TH1D* dist, const char* fitFunc, double xMin, double xMax,
 
 inline bool equals(double a, double b, double epsilon) {
   return abs(a - b) < epsilon;
-}
-
-inline const char* boolToString(bool b) {
-  return b ? "true" : "false";
 }
