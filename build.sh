@@ -16,14 +16,17 @@ SIMULATION_BIN=$OUT_DIR/simulation
 ANALISIS_BIN=$OUT_DIR/analisis
 
 function build-simulation() {
+	mkdir $OUT_DIR
 	g++ -o $SIMULATION_BIN $SRC_FILES $SIMULATION $COMPILER_ARGS
 }
 
 function build-analisis() {
+	mkdir $OUT_DIR
 	g++ -o $ANALISIS_BIN $SRC_FILES $ANALISIS $COMPILER_ARGS
 }
 
 function build-test() {
+	mkdir $OUT_DIR
 	g++ -o $TEST_BIN $SRC_FILES $TEST $COMPILER_ARGS
 }
 
