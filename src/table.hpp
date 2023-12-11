@@ -29,7 +29,7 @@ class Table {
 
  private:
   std::array<std::string, columns> m_Headers;
-  std::array<int, columns> m_ColsWidth;
+  std::array<int, columns> m_ColumnsWidths;
   std::vector<std::array<std::string, columns>> m_Rows;
   int m_ColumnSpacing = 1;
 
@@ -50,14 +50,15 @@ class Table {
     }
     // print headers
     for (int i = 0; i < columns; i++) {
-      std::cout << align(m_Headers[i], m_ColsWidth[i] - m_Headers[i].size())
+      std::cout << align(m_Headers[i], m_ColumnsWidths[i] - m_Headers[i].size())
                 << spacing;
     }
     std::cout << "\n";
     // print table body
     for (auto const& row : m_Rows) {
       for (int i = 0; i < columns; i++) {
-        std::cout << align(row[i], m_ColsWidth[i] - row[i].size()) << spacing;
+        std::cout << align(row[i], m_ColumnsWidths[i] - row[i].size())
+                  << spacing;
       }
       std::cout << "\n";
     }
@@ -72,8 +73,8 @@ class Table {
     for (auto& header : headers) {
       m_Headers[i] = header;
       // update column width
-      if ((int)header.size() > m_ColsWidth[i]) {
-        m_ColsWidth[i] = header.size();
+      if ((int)header.size() > m_ColumnsWidths[i]) {
+        m_ColumnsWidths[i] = header.size();
       }
       ++i;
     }
@@ -93,8 +94,8 @@ class Table {
             stringValues[i] = std::to_string(row);
           }
           // update column width
-          if ((int)stringValues[i].size() > this->m_ColsWidth[i]) {
-            this->m_ColsWidth[i] = stringValues[i].size();
+          if ((int)stringValues[i].size() > this->m_ColumnsWidths[i]) {
+            this->m_ColumnsWidths[i] = stringValues[i].size();
           }
           i++;
         }(),
