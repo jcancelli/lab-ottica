@@ -1,11 +1,16 @@
+#include <TCanvas.h>
 #include <TF1.h>
 #include <TFile.h>
+#include <TFitResult.h>
+#include <TFitResultPtr.h>
 #include <TH1D.h>
 
 #include <iostream>
 #include <stdexcept>
+#include <string>
 
 #include "constants.hpp"
+#include "table.hpp"
 
 TH1D *particleTypesHisto, *zenithDist, *azimuthDist, *pulseDist,
     *traversePulseDist;
@@ -13,10 +18,10 @@ TH1D *particleEnergyDist, *invMassDist, *invMassDiffChargeDist;
 TH1D *invMassSameChargeDist, *invMassPioneKaoneDiscordantDist;
 TH1D *invMassPioneKaoneConcordantDist, *invMassSibDecayDist;
 
+inline void section(const char* title);
 inline const char* boolToString(bool b);
 inline bool equals(double a, double b, double epsilon);
-bool checkFit(TH1D* dist, const char* fitFunc, double xMin, double xMax,
-              double chiSquareTollerance);
+void fit(TH1D* dist, const char* fitFunc, double xMin, double xMax);
 void loadHistos(TFile& file);
 void checkHistosEntries();
 void checkParticleTypesDistribution();
@@ -34,11 +39,16 @@ enum ParticleIndex : int {
 
 int main() {
   TFile file("histos.root");
+  TCanvas canvas("canvas", "Ciaccia", 400, 400);
   loadHistos(file);
   checkHistosEntries();
   checkParticleTypesDistribution();
-  //   checkFit(zenithDist, "[0] * x + [1]", 0, M_PI, 0.1);
-  //   checkFit(azimuthDist, "[0] * x + [1]", 0, M_PI * 2, 0.1);
+  section("Zenith fit");
+  fit(zenithDist, "pol0", 0, M_PI);
+  section("Azimuth fit");
+  fit(azimuthDist, "pol0", 0, M_PI * 2);
+  section("Pulse fit");
+  fit(pulseDist, "expo", 0, 7);
   file.Close();
 }
 
@@ -46,7 +56,7 @@ void loadHistos(TFile& file) {
   if (!file.IsOpen()) {
     throw std::runtime_error("Unable to open histos.root");
   }
-  std::cout << "Loading histograms\n";
+  section("Loading histograms");
   particleTypesHisto = (TH1D*)file.Get(  //
       "particle-types-distribution");
   zenithDist = (TH1D*)file.Get(  //
@@ -79,66 +89,86 @@ void checkHistosEntries() {
     invMassEntries += N_PARTICLES - i;
   }
   invMassEntries *= N_EVENTS;
-  std::cout << "Checking histograms entries-------\n";
-  std::cout << "HISTO\t\t\t\t\t\tEXPECTED\t\tACTUAL\n";
-  std::cout << "particle-types\t\t\t\t\t" << (N_EVENTS * N_PARTICLES)
-            << "\t\t\t" << particleTypesHisto->GetEntries() << "\n";
-  std::cout << "zenith\t\t\t\t\t\t" << (N_EVENTS * N_PARTICLES) << "\t\t\t"
-            << zenithDist->GetEntries() << "\n";
-  std::cout << "azimuth\t\t\t\t\t\t" << (N_EVENTS * N_PARTICLES) << "\t\t\t"
-            << azimuthDist->GetEntries() << "\n";
-  std::cout << "pulse\t\t\t\t\t\t" << (N_EVENTS * N_PARTICLES) << "\t\t\t"
-            << pulseDist->GetEntries() << "\n";
-  std::cout << "traverse-pulse\t\t\t\t\t" << (N_EVENTS * N_PARTICLES)
-            << "\t\t\t" << traversePulseDist->GetEntries() << "\n";
-  std::cout << "particle-energy\t\t\t\t\t" << (N_EVENTS * N_PARTICLES)
-            << "\t\t\t" << particleEnergyDist->GetEntries() << "\n";
-  std::cout << "invariant-mass\t\t\t\t\t" << invMassEntries << "\t\t"
-            << invMassDist->GetEntries() << "\n";
-  std::cout << "invariant-mass-discordant-charge\t\t" << (invMassEntries / 2)
-            << "\t\t" << invMassDiffChargeDist->GetEntries() << "\n";
-  std::cout << "invariant-mass-concordant-charge\t\t" << (invMassEntries / 2)
-            << "\t\t" << invMassSameChargeDist->GetEntries() << "\n";
 
-  std::cout << "invariant-mass-pione-kaone-discordant-charge\t"
-            << invMassPioneKaoneDiscordantDist->GetEntries() << "\n";
-  std::cout << "invariant-mass-pione-kaone-concordant-charge\t"
-            << invMassPioneKaoneConcordantDist->GetEntries() << "\n";
-  std::cout << "invariant-mass-siblings\t\t\t\t"
-            << invMassSibDecayDist->GetEntries() << "\n";
+  section("Histograms entries");
+  Table<const char*, int, int>()
+      .headers({"HISTOGRAM", "EXPECTED", "ACTUAL"})
+      .row("particle-types",        //
+           N_EVENTS * N_PARTICLES,  //
+           particleTypesHisto->GetEntries())
+      .row("zenith",                //
+           N_EVENTS * N_PARTICLES,  //
+           zenithDist->GetEntries())
+      .row("azimuth",               //
+           N_EVENTS * N_PARTICLES,  //
+           azimuthDist->GetEntries())
+      .row("pulse",                 //
+           N_EVENTS * N_PARTICLES,  //
+           pulseDist->GetEntries())
+      .row("traverse-pulse",        //
+           N_EVENTS * N_PARTICLES,  //
+           traversePulseDist->GetEntries())
+      .row("particle-energy",       //
+           N_EVENTS * N_PARTICLES,  //
+           particleEnergyDist->GetEntries())
+      .row("invariant-mass",  //
+           invMassEntries,    //
+           invMassDist->GetEntries())
+      .row("invariant-mass-discordant-charge",  //
+           invMassEntries / 2,                  //
+           invMassDiffChargeDist->GetEntries())
+      .row("invariant-mass-concordant-charge",  //
+           invMassEntries / 2,                  //
+           invMassSameChargeDist->GetEntries())
+      .row("invariant-mass-pione-kaone-discordant-charge",  //
+           0,                                               //
+           invMassPioneKaoneDiscordantDist->GetEntries())
+      .row("invariant-mass-pione-kaone-concordant-charge",  //
+           0,                                               //
+           invMassPioneKaoneConcordantDist->GetEntries())
+      .row("invariant-mass-decay siblings",  //
+           0,                                //
+           invMassSibDecayDist->GetEntries())
+      .spacing(7)
+      .print();
 }
 
 void checkParticleTypesDistribution() {
-  std::cout << "Checking particle types distributions\n";
+  section("Particle types distributions");
   const auto computeBinPercentage = [](int binIndex, TH1D* dist) {
     return dist->GetBinContent(binIndex) / dist->GetEntries() * 100;
   };
-  std::cout << "PARTICLE\tEXPECTED\tACTUAL\n";
-  std::cout << "PIONE+\t\t40%\t\t"
-            << computeBinPercentage(PIONE_P, particleTypesHisto) << "%\n";
-  std::cout << "PIONE-\t\t40%\t\t"
-            << computeBinPercentage(PIONE_N, particleTypesHisto) << "%\n";
-  std::cout << "KAONE+\t\t5%\t\t"
-            << computeBinPercentage(KAONE_P, particleTypesHisto) << "%\n";
-  std::cout << "KAONE-\t\t5%\t\t"
-            << computeBinPercentage(KAONE_N, particleTypesHisto) << "%\n";
-  std::cout << "PROTONE+\t4.5%\t\t"
-            << computeBinPercentage(PROTONE_P, particleTypesHisto) << "%\n";
-  std::cout << "PROTONE-\t4.5%\t\t"
-            << computeBinPercentage(PROTONE_N, particleTypesHisto) << "%\n";
-  std::cout << "K*\t\t1%\t\t"
-            << computeBinPercentage(K_STAR, particleTypesHisto) << "%\n";
+  Table<const char*, double, double>()
+      .headers({"PARTICLE", "EXPECTED (%)", "ACTUAL (%)"})
+      .row("PIONE+", 40, computeBinPercentage(PIONE_P, particleTypesHisto))
+      .row("PIONE-", 40, computeBinPercentage(PIONE_N, particleTypesHisto))
+      .row("KAONE+", 5, computeBinPercentage(KAONE_P, particleTypesHisto))
+      .row("KAONE-", 5, computeBinPercentage(KAONE_N, particleTypesHisto))
+      .row("PROTONE+", 4.5, computeBinPercentage(PROTONE_P, particleTypesHisto))
+      .row("PROTONE-", 4.5, computeBinPercentage(PROTONE_N, particleTypesHisto))
+      .row("K*", 1, computeBinPercentage(K_STAR, particleTypesHisto))
+      .spacing(7)
+      .print();
 }
 
-bool checkFit(TH1D* dist, const char* fitFunc, double xMin, double xMax,
-              double chiSquareTollerance) {
-  TF1 linear("fit-func", fitFunc, xMin, xMax);
+void fit(TH1D* dist, const char* fitFormula, double xMin, double xMax) {
+  TF1 fitFunc("fit-func", fitFormula, xMin, xMax);
   dist->Fit("fit-func", "Q");
-  std::cout << "chi reduced: " << (linear.GetChisquare() / linear.GetNDF())
-            << "\n";
-  return (linear.GetChisquare() / linear.GetNDF()) < chiSquareTollerance;
+  std::cout << "Function\t\t" << fitFormula << "\n";
+  std::cout << "Parameters:\n";
+  for (int i = 0; i < fitFunc.GetNpar(); i++) {
+    std::cout << "\t" << fitFunc.GetParName(i) << ": "
+              << fitFunc.GetParameter(i) << "\n";
+  }
+  std::cout << "Reduced chi squared\t"
+            << (fitFunc.GetChisquare() / fitFunc.GetNDF()) << "\n";
+  std::cout << "Fit probability\t\t" << fitFunc.GetProb() << "\n";
 }
 
 inline bool equals(double a, double b, double epsilon) {
   return abs(a - b) < epsilon;
+}
+
+inline void section(const char* title) {
+  std::cout << "\n----- " << title << " -----\n";
 }
