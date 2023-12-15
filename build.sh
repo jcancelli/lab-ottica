@@ -6,7 +6,7 @@ command -v g++ > /dev/null 2>&1 || { echo >&2 "The command g++ (c++ compiler) co
 
 OUT_DIR=out
 
-COMPILER_ARGS="$(root-config --cflags --libs) -Wall -Wextra"
+COMPILER_ARGS="$(root-config --cflags --libs) -Wall -Wextra -std=c++17"
 
 SRC_FILES="\
 	src/particle_type.cpp \
