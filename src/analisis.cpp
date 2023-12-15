@@ -167,8 +167,8 @@ void saveToPdf() {
     std::filesystem::create_directory("histos");
   }
 
+  TCanvas canvas("pdf-canvas", "", 700, 700);
   for (auto& histo : histos) {
-    TCanvas canvas("pdf-canvas", "", 700, 700);
     histo.second->Draw("HIST");
     canvas.SaveAs(concat("histos/", histo.first, ".pdf").c_str(), "Q");
   }
