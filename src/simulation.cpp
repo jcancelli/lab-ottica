@@ -11,12 +11,14 @@
 #include "particle.hpp"
 #include "particle_type.hpp"
 #include "resonance_type.hpp"
+#include "util.hpp"
 
 const double PI2 = 2 * M_PI;
 
 inline const char* determineParticleType();
 
 int main() {
+  section("Initializing");
   // create particle types and cache their index/id localy
   const int pioneP = Particle::AddParticleType("pione+", 0.13957, 1);
   const int pioneN = Particle::AddParticleType("pione-", 0.13957, -1);
@@ -92,9 +94,9 @@ int main() {
   invMassPioneKaoneConcordantDist.Sumw2();
   invMassSibDecayDist.Sumw2();
 
-  std::cout << "Running simulation\n";
+  section("Simulation");
   for (int i = 0; i < N_EVENTS; i++) {
-    (i % 10000 == 0) && std::cout << i << " events simulated\n";
+    (i % 10000 == 0) && std::cout << (i / N_EVENTS * 100) << "% completed\n";
     while (eventParticles.size() <= N_PARTICLES) {
       phi = gRandom->Uniform(0., PI2);
       theta = gRandom->Uniform(0., M_PI);
@@ -166,7 +168,7 @@ int main() {
   }
 
   // save histos to file
-  std::cout << "Saving to file\n";
+  section("Saving to file\n");
   TFile saveFile("histos.root", "RECREATE");
   if (!saveFile.IsOpen()) {
     std::cout << "Unable to open histos.root file\n";
