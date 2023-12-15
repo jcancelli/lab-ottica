@@ -11,6 +11,7 @@ COMPILER_ARGS="$(root-config --cflags --libs) -Wall -Wextra"
 SRC_FILES="\
 	src/particle_type.cpp \
 	src/resonance_type.cpp \
+	src/util.cpp \
 	src/particle.cpp"
 SIMULATION=src/simulation.cpp
 ANALISIS=src/analisis.cpp
