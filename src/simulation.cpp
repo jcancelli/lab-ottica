@@ -26,6 +26,10 @@ int main() {
   const int protoneN = Particle::AddParticleType("protone-", 0.93827, -1);
   const int kStar = Particle::AddParticleType("k*", 0.89166, 0, 0.05);
 
+  // get rid of unused variable warning
+  (void)protoneP;
+  (void)protoneN;
+
   gRandom->SetSeed();
 
   std::vector<Particle> eventParticles;
