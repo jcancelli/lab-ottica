@@ -168,7 +168,7 @@ int main() {
   }
 
   // save histos to file
-  section("Saving to file\n");
+  section("Saving to file");
   TFile saveFile("histos.root", "RECREATE");
   if (!saveFile.IsOpen()) {
     std::cout << "Unable to open histos.root file\n";
