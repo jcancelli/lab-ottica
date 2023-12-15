@@ -11,6 +11,7 @@
 
 #include "constants.hpp"
 #include "table.hpp"
+#include "util.hpp"
 
 TH1D *particleTypesHisto, *zenithDist, *azimuthDist, *pulseDist,
     *traversePulseDist;
@@ -18,13 +19,11 @@ TH1D *particleEnergyDist, *invMassDist, *invMassDiffChargeDist;
 TH1D *invMassSameChargeDist, *invMassPioneKaoneDiscordantDist;
 TH1D *invMassPioneKaoneConcordantDist, *invMassSibDecayDist;
 
-inline void section(const char* title);
-inline const char* boolToString(bool b);
-inline bool equals(double a, double b, double epsilon);
 void fit(TH1D* dist, const char* fitFunc, double xMin, double xMax);
 void loadHistos(TFile& file);
 void checkHistosEntries();
 void checkParticleTypesDistribution();
+void saveToPdf();
 
 enum ParticleIndex : int {
   INVALID_PARTICLE,
@@ -165,10 +164,5 @@ void fit(TH1D* dist, const char* fitFormula, double xMin, double xMax) {
   std::cout << "Fit probability\t\t" << fitFunc.GetProb() << "\n";
 }
 
-inline bool equals(double a, double b, double epsilon) {
-  return abs(a - b) < epsilon;
-}
-
-inline void section(const char* title) {
-  std::cout << "\n----- " << title << " -----\n";
+void saveToPdf() {
 }
