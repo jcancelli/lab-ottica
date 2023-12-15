@@ -48,7 +48,7 @@ enum ParticleIndex : int {
 
 int main() {
   TFile file("histos.root");
-  TCanvas canvas("canvas", "Ciaccia", 400, 400);
+  TCanvas canvas("canvas", "", 400, 400);
   loadHistos(file);
   checkHistosEntries();
   checkParticleTypesDistribution();
