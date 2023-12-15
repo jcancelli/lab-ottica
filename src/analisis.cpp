@@ -121,7 +121,7 @@ void checkHistosEntries() {
            histos["invariant-mass-concordant-charge-pione-kaone-distribution"]
                ->GetEntries())
       .row("invariant-mass-decay-siblings",  //
-           0,                                //
+           N_EVENTS * N_PARTICLES * 0.01,    //
            histos["invariant-mass-siblings-distribution"]->GetEntries())
       .spacing(7)
       .print();
