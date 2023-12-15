@@ -126,8 +126,9 @@ int main() {
           eventParticles.push_back(Particle("pione-", px, py, pz));
           eventParticles.push_back(Particle("kaone+", px, py, pz));
         }
-        const auto& a = eventParticles[eventParticles.size() - 1];
-        const auto& b = eventParticles[eventParticles.size() - 2];
+        auto& a = eventParticles[eventParticles.size() - 1];
+        auto& b = eventParticles[eventParticles.size() - 2];
+        particle.Decay2body(a, b);
         invMassSibDecayDist.Fill(a.InvMass(b));
       } else {
         eventParticles.push_back(particle);
