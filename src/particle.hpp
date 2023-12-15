@@ -23,7 +23,7 @@ class Particle {
   static int AddParticleType(std::string name, double mass, int charge,
                              double width = 0.0);
   static void PrintParticleTypes();
-  int Decay2body(Particle& dau1, Particle& dau2) const;
+  void Decay2body(Particle& dau1, Particle& dau2) const;
   double TotalEnergy() const;
   double InvMass(Particle const& p) const;
   void Print() const;

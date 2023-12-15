@@ -45,10 +45,9 @@ void Particle::PrintParticleTypes() {
   std::cout << "--------------\n";
 }
 
-int Particle::Decay2body(Particle& dau1, Particle& dau2) const {
+void Particle::Decay2body(Particle& dau1, Particle& dau2) const {
   if (GetMass() == 0.0) {
-    std::cout << "Decayment cannot be preformed if mass is zero\n";
-    return 1;
+    throw std::runtime_error("Decayment cannot be preformed if mass is zero");
   }
 
   double massMot = GetMass();
@@ -73,9 +72,9 @@ int Particle::Decay2body(Particle& dau1, Particle& dau2) const {
   }
 
   if (massMot < massDau1 + massDau2) {
-    std::cout << "Decayment cannot be preformed because mass is too low in "
-                 "this channel\n";
-    return 2;
+    throw std::runtime_error(
+        "Decayment cannot be preformed because mass is too low in this "
+        "channel");
   }
 
   double pout =
@@ -101,8 +100,6 @@ int Particle::Decay2body(Particle& dau1, Particle& dau2) const {
 
   dau1.Boost(bx, by, bz);
   dau2.Boost(bx, by, bz);
-
-  return 0;
 }
 
 double Particle::TotalEnergy() const {
