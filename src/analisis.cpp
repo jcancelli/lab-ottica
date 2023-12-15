@@ -63,10 +63,10 @@ int main() {
 }
 
 void loadHistos(TFile& file) {
+  section("Loading histograms");
   if (!file.IsOpen()) {
     throw std::runtime_error("Unable to open histos.root");
   }
-  section("Loading histograms");
   for (auto& histo : histos) {
     std::cout << "Loading " << histo.first << "\n";
     histo.second = (TH1D*)file.Get(histo.first);
