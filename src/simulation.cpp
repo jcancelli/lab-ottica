@@ -90,6 +90,7 @@ int main() {
 
   std::cout << "Running simulation\n";
   for (int i = 0; i < N_EVENTS; i++) {
+    (i % 10000 == 0) && std::cout << i << " events simulated\n";
     while (eventParticles.size() <= N_PARTICLES) {
       phi = gRandom->Uniform(0., PI2);
       theta = gRandom->Uniform(0., M_PI);
