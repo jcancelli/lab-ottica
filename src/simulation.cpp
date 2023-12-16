@@ -156,10 +156,14 @@ int main() {
         // fill inv mass histos for pione-kaone pairs
         const int aType = a.GetParticleType(), bType = b.GetParticleType();
         if ((aType == pioneP && bType == kaoneN) ||
-            (aType == pioneN && bType == kaoneP)) {
+            (aType == pioneN && bType == kaoneP) ||
+            (aType == kaoneP && bType == pioneN) ||
+            (aType == kaoneN && bType == pioneP)) {
           invMassPioneKaoneDiscordantDist.Fill(invMass);
         } else if ((aType == pioneP && bType == kaoneP) ||
-                   (aType == pioneN && bType == kaoneN)) {
+                   (aType == pioneN && bType == kaoneN) ||
+                   (aType == kaoneP && bType == pioneP) ||
+                   (aType == kaoneN && bType == pioneN)) {
           invMassPioneKaoneConcordantDist.Fill(invMass);
         }
       }
