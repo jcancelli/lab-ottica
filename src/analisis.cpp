@@ -74,6 +74,8 @@ void loadHistos(TFile& file) {
 }
 
 void checkHistosEntries() {
+  const int expectedParticlesTotal = N_EVENTS * N_PARTICLES;
+
   double invMassEntries = 0.0;
   for (int i = 0; i <= N_PARTICLES; i++) {
     invMassEntries += N_PARTICLES - i;
@@ -84,22 +86,22 @@ void checkHistosEntries() {
   Table<const char*, int, int>()
       .headers({"HISTOGRAM", "EXPECTED", "ACTUAL"})
       .row("particle-types",        //
-           N_EVENTS * N_PARTICLES,  //
+           expectedParticlesTotal,  //
            histos["particle-types-distribution"]->GetEntries())
       .row("zenith",                //
-           N_EVENTS * N_PARTICLES,  //
+           expectedParticlesTotal,  //
            histos["zenith-distribution"]->GetEntries())
       .row("azimuth",               //
-           N_EVENTS * N_PARTICLES,  //
+           expectedParticlesTotal,  //
            histos["azimuth-distribution"]->GetEntries())
       .row("pulse",                 //
-           N_EVENTS * N_PARTICLES,  //
+           expectedParticlesTotal,  //
            histos["pulse-distribution"]->GetEntries())
       .row("traverse-pulse",        //
-           N_EVENTS * N_PARTICLES,  //
+           expectedParticlesTotal,  //
            histos["traverse-pulse-distribution"]->GetEntries())
       .row("particle-energy",       //
-           N_EVENTS * N_PARTICLES,  //
+           expectedParticlesTotal,  //
            histos["particle-energy-distribution"]->GetEntries())
       .row("invariant-mass",  //
            invMassEntries,    //
@@ -113,15 +115,15 @@ void checkHistosEntries() {
           invMassEntries / 2,                  //
           histos["invariant-mass-concordant-charge-distribution"]->GetEntries())
       .row("invariant-mass-pione-kaone-discordant-charge",  //
-           0,                                               //
+           invMassEntries * 0.8 * 0.1,                      // FIXME
            histos["invariant-mass-discordant-charge-pione-kaone-distribution"]
                ->GetEntries())
       .row("invariant-mass-pione-kaone-concordant-charge",  //
-           0,                                               //
+           invMassEntries * 0.8 * 0.1,                      // FIXME
            histos["invariant-mass-concordant-charge-pione-kaone-distribution"]
                ->GetEntries())
       .row("invariant-mass-decay-siblings",  //
-           N_EVENTS * N_PARTICLES * 0.01,    //
+           expectedParticlesTotal * 0.01,    //
            histos["invariant-mass-siblings-distribution"]->GetEntries())
       .spacing(7)
       .print();
