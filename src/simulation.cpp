@@ -44,11 +44,11 @@ int main() {
       zenithDist(                                                       //
           "zenith-distribution",                                        //
           "Zenith distribution",                                        //
-          180, 0., M_PI),                                               //
+          1000, 0., M_PI),                                              //
       azimuthDist(                                                      //
           "azimuth-distribution",                                       //
           "Azimuth distribution",                                       //
-          360, 0., PI2),                                                //
+          1000, 0., PI2),                                               //
       pulseDist(                                                        //
           "pulse-distribution",                                         //
           "Pulse distribution",                                         //
@@ -60,31 +60,31 @@ int main() {
       particleEnergyDist(                                               //
           "particle-energy-distribution",                               //
           "Particle energy distribution",                               //
-          100, 0., 10.),                                                //
+          1000, 0., 10.),                                               //
       invMassDist(                                                      //
           "invariant-mass-distribution",                                //
           "Invariant mass distribution",                                //
-          50, 0, 10),                                                   //
+          1000, 0, 10),                                                 //
       invMassDiffChargeDist(                                            //
           "invariant-mass-discordant-charge-distribution",              //
           "Invariant mass discrodant charge distribution",              //
-          50, 0, 10),                                                   //
+          1000, 0, 10),                                                 //
       invMassSameChargeDist(                                            //
           "invariant-mass-concordant-charge-distribution",              //
           "Invariant mass concordant charge distribution",              //
-          50, 0, 10),                                                   //
+          1000, 0, 10),                                                 //
       invMassPioneKaoneDiscordantDist(                                  //
           "invariant-mass-discordant-charge-pione-kaone-distribution",  //
           "Invariant mass discordant charge pione kaone distribution",  //
-          50, 0, 10),                                                   //
+          1000, 0, 10),                                                 //
       invMassPioneKaoneConcordantDist(                                  //
           "invariant-mass-concordant-charge-pione-kaone-distribution",  //
           "Invariant mass concordant charge pione kaone distribution",  //
-          50, 0, 10),                                                   //
+          1000, 0, 10),                                                 //
       invMassSibDecayDist(                                              //
           "invariant-mass-siblings-distribution",                       //
           "Invariant mass siblings distribution",                       //
-          100, 0, 7);
+          1000, 0, 7);
 
   // init histos' weights
   invMassDist.Sumw2();
