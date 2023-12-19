@@ -110,8 +110,7 @@ double Particle::TotalEnergy() const {
 
 double Particle::InvMass(Particle const& p) const {
   const auto eSumSquared = std::pow(TotalEnergy() + p.TotalEnergy(), 2);
-  const auto pX = fPx + p.GetPulseX(), pY = fPy + p.GetPulseY(),
-             pZ = fPz + p.GetPulseZ();
+  const auto pX = fPx + p.fPx, pY = fPy + p.fPy, pZ = fPz + p.fPz;
   const auto pulseSquared = pX * pX + pY * pY + pZ * pZ;
   return std::sqrt(eSumSquared - pulseSquared);
 }
@@ -151,15 +150,15 @@ void Particle::SetParticleType(int index) {
   fIndex = index;
 }
 
-int Particle::GetPulseX() const {
+double Particle::GetPulseX() const {
   return fPx;
 }
 
-int Particle::GetPulseY() const {
+double Particle::GetPulseY() const {
   return fPy;
 }
 
-int Particle::GetPulseZ() const {
+double Particle::GetPulseZ() const {
   return fPz;
 }
 

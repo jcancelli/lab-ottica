@@ -31,9 +31,9 @@ class Particle {
   int GetParticleType() const;
   void SetParticleType(std::string name);
   void SetParticleType(int index);
-  int GetPulseX() const;
-  int GetPulseY() const;
-  int GetPulseZ() const;
+  double GetPulseX() const;
+  double GetPulseY() const;
+  double GetPulseZ() const;
   void SetP(double x, double y, double z);
   double GetMass() const;
   double GetCharge() const;
