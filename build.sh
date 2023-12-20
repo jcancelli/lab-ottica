@@ -14,19 +14,19 @@ SRC_FILES="\
 	src/util.cpp \
 	src/particle.cpp"
 SIMULATION=src/simulation.cpp
-ANALISIS=src/analisis.cpp
+ANALYSIS=src/analysis.cpp
 TEST=src/test.cpp
 
 TEST_BIN=$OUT_DIR/test
 SIMULATION_BIN=$OUT_DIR/simulation
-ANALISIS_BIN=$OUT_DIR/analisis
+ANALYSIS_BIN=$OUT_DIR/analysis
 
 function build-simulation() {
 	g++ -o $SIMULATION_BIN $SRC_FILES $SIMULATION $COMPILER_ARGS
 }
 
-function build-analisis() {
-	g++ -o $ANALISIS_BIN $SRC_FILES $ANALISIS $COMPILER_ARGS
+function build-analysis() {
+	g++ -o $ANALYSIS_BIN $SRC_FILES $ANALYSIS $COMPILER_ARGS
 }
 
 function build-test() {
@@ -34,10 +34,10 @@ function build-test() {
 }
 
 function print-help() {
-	echo "Synthax: ./build.sh <analisis|simulation|test|build-analisis|build-simulation|build-test>"
+	echo "Synthax: ./build.sh <analysis|simulation|test|build-analysis|build-simulation|build-test>"
 	echo ""
-	echo analisis - Build and run analisis
-	echo build-analisis - Build analisis
+	echo analysis - Build and run analysis
+	echo build-analysis - Build analysis
 	echo simulation - Build and run simulation
 	echo build-simulation - Build main program
 	echo test - Build and run tests
@@ -50,11 +50,11 @@ if ! [ -d $OUT_DIR ]; then
 fi
 
 # Executes command
-if [ "$1" == "analisis" ] || [ $# -eq 0 ]; then
-	$(build-analisis) \
-	&& ./${ANALISIS_BIN}
-elif [ "$1" == "build-analisis" ]; then
-	$(build-analisis)
+if [ "$1" == "analysis" ] || [ $# -eq 0 ]; then
+	$(build-analysis) \
+	&& ./${ANALYSIS_BIN}
+elif [ "$1" == "build-analysis" ]; then
+	$(build-analysis)
 elif [ "$1" == "simulation" ]; then
 	$(build-simulation) \
 	&& ./${SIMULATION_BIN}
