@@ -1,6 +1,7 @@
 #include <TFile.h>
 #include <TH1D.h>
 #include <TRandom.h>
+#include <TStopwatch.h>
 
 #include <cmath>
 #include <iostream>
@@ -18,6 +19,8 @@ const double PI2 = 2 * M_PI;
 inline const char* determineParticleType();
 
 int main() {
+  TStopwatch timer;
+
   section("Initializing");
   // create particle types and cache their index/id localy
   const int pioneP = Particle::AddParticleType("pione+", 0.13957, 1);
@@ -95,8 +98,9 @@ int main() {
   invMassSibDecayDist.Sumw2();
 
   section("Simulation");
-  for (int i = 0; i < N_EVENTS; i++) {
-    (i % 10000 == 0) && std::cout << (i / N_EVENTS * 100) << "% completed\n";
+  timer.Start();
+  double completion = 0.0;
+  for (int i = 1; i <= N_EVENTS; i++) {
     while (eventParticles.size() <= N_PARTICLES) {
       phi = gRandom->Uniform(0., PI2);
       theta = gRandom->Uniform(0., M_PI);
@@ -170,7 +174,12 @@ int main() {
     }
 
     eventParticles.clear();
+
+    completion = i / N_EVENTS * 100.;
+    printf("\r%.0f%% completed in %.3fs", completion, timer.RealTime());
+    timer.Continue();
   }
+  std::cout << "\n";
 
   // save histos to file
   section("Saving to file");
