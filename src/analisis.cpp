@@ -16,18 +16,18 @@
 #include "util.hpp"
 
 std::unordered_map<const char*, TH1D*> histos{
-    {"particle-types-distribution", nullptr},
-    {"zenith-distribution", nullptr},
-    {"azimuth-distribution", nullptr},
-    {"pulse-distribution", nullptr},
-    {"traverse-pulse-distribution", nullptr},
-    {"particle-energy-distribution", nullptr},
-    {"invariant-mass-distribution", nullptr},
-    {"invariant-mass-discordant-charge-distribution", nullptr},
-    {"invariant-mass-concordant-charge-distribution", nullptr},
-    {"invariant-mass-discordant-charge-pione-kaone-distribution", nullptr},
-    {"invariant-mass-concordant-charge-pione-kaone-distribution", nullptr},
-    {"invariant-mass-siblings-distribution", nullptr}};
+    {"particle-types", nullptr},
+    {"zenith", nullptr},
+    {"azimuth", nullptr},
+    {"pulse", nullptr},
+    {"traverse-pulse", nullptr},
+    {"particle-energy", nullptr},
+    {"inv-mass", nullptr},
+    {"inv-mass-discordant", nullptr},
+    {"inv-mass-concordant", nullptr},
+    {"inv-mass-discordant-pk", nullptr},
+    {"inv-mass-concordant-pk", nullptr},
+    {"inv-mass-siblings", nullptr}};
 
 void fit(TH1D* dist, const char* fitFunc, double xMin, double xMax);
 void loadHistos(TFile& file);
@@ -47,17 +47,17 @@ enum ParticleIndex : int {
 };
 
 int main() {
-  TFile file("histos.root");
+  TFile file(SAVE_FILE);
   TCanvas canvas("canvas", "", 400, 400);
   loadHistos(file);
   checkHistosEntries();
   checkParticleTypesDistribution();
   section("Zenith fit");
-  fit(histos["zenith-distribution"], "pol0", 0, M_PI);
+  fit(histos["zenith"], "pol0", 0, M_PI);
   section("Azimuth fit");
-  fit(histos["azimuth-distribution"], "pol0", 0, M_PI * 2);
+  fit(histos["azimuth"], "pol0", 0, M_PI * 2);
   section("Pulse fit");
-  fit(histos["pulse-distribution"], "expo", 0, 7);
+  fit(histos["pulse"], "expo", 0, 7);
   saveToPdf();
   file.Close();
 }
@@ -65,7 +65,7 @@ int main() {
 void loadHistos(TFile& file) {
   section("Loading histograms");
   if (!file.IsOpen()) {
-    throw std::runtime_error("Unable to open histos.root");
+    throw std::runtime_error("Unable to open histograms file");
   }
   for (auto& histo : histos) {
     std::cout << "Loading " << histo.first << "\n";
@@ -82,49 +82,48 @@ void checkHistosEntries() {
   }
   invMassEntries *= N_EVENTS;
 
+  const int expectedKP =
+      (N_PARTICLES * N_PARTICLES / 2) * (0.8 + 0.01) * (0.1 + 0.01) * N_EVENTS;
+
   section("Histograms entries");
   Table<const char*, int, int>()
       .headers({"HISTOGRAM", "EXPECTED", "ACTUAL"})
       .row("particle-types",        //
            expectedParticlesTotal,  //
-           histos["particle-types-distribution"]->GetEntries())
+           histos["particle-types"]->GetEntries())
       .row("zenith",                //
            expectedParticlesTotal,  //
-           histos["zenith-distribution"]->GetEntries())
+           histos["zenith"]->GetEntries())
       .row("azimuth",               //
            expectedParticlesTotal,  //
-           histos["azimuth-distribution"]->GetEntries())
+           histos["azimuth"]->GetEntries())
       .row("pulse",                 //
            expectedParticlesTotal,  //
-           histos["pulse-distribution"]->GetEntries())
+           histos["pulse"]->GetEntries())
       .row("traverse-pulse",        //
            expectedParticlesTotal,  //
-           histos["traverse-pulse-distribution"]->GetEntries())
+           histos["traverse-pulse"]->GetEntries())
       .row("particle-energy",       //
            expectedParticlesTotal,  //
-           histos["particle-energy-distribution"]->GetEntries())
+           histos["particle-energy"]->GetEntries())
       .row("invariant-mass",  //
            invMassEntries,    //
-           histos["invariant-mass-distribution"]->GetEntries())
-      .row(
-          "invariant-mass-discordant-charge",  //
-          invMassEntries / 2,                  //
-          histos["invariant-mass-discordant-charge-distribution"]->GetEntries())
-      .row(
-          "invariant-mass-concordant-charge",  //
-          invMassEntries / 2,                  //
-          histos["invariant-mass-concordant-charge-distribution"]->GetEntries())
+           histos["inv-mass"]->GetEntries())
+      .row("invariant-mass-discordant-charge",  //
+           invMassEntries / 2,                  //
+           histos["inv-mass-discordant"]->GetEntries())
+      .row("invariant-mass-concordant-charge",  //
+           invMassEntries / 2,                  //
+           histos["inv-mass-concordant"]->GetEntries())
       .row("invariant-mass-pione-kaone-discordant-charge",  //
-           invMassEntries * 0.8 * 0.1,                      // FIXME
-           histos["invariant-mass-discordant-charge-pione-kaone-distribution"]
-               ->GetEntries())
+           expectedKP,                                      //
+           histos["inv-mass-discordant-pk"]->GetEntries())
       .row("invariant-mass-pione-kaone-concordant-charge",  //
-           invMassEntries * 0.8 * 0.1,                      // FIXME
-           histos["invariant-mass-concordant-charge-pione-kaone-distribution"]
-               ->GetEntries())
+           expectedKP,                                      //
+           histos["inv-mass-concordant-pk"]->GetEntries())
       .row("invariant-mass-decay-siblings",  //
            expectedParticlesTotal * 0.01,    //
-           histos["invariant-mass-siblings-distribution"]->GetEntries())
+           histos["inv-mass-siblings"]->GetEntries())
       .spacing(7)
       .print();
 }
@@ -134,7 +133,7 @@ void checkParticleTypesDistribution() {
   const auto computeBinPercentage = [](int binIndex, TH1D* dist) {
     return dist->GetBinContent(binIndex) / dist->GetEntries() * 100;
   };
-  auto histo = histos["particle-types-distribution"];
+  auto histo = histos["particle-types"];
   Table<const char*, double, double>()
       .headers({"PARTICLE", "EXPECTED (%)", "ACTUAL (%)"})
       .row("PIONE+", 40, computeBinPercentage(PIONE_P, histo))
