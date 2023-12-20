@@ -21,27 +21,40 @@ TEST_BIN=$OUT_DIR/test
 SIMULATION_BIN=$OUT_DIR/simulation
 ANALYSIS_BIN=$OUT_DIR/analysis
 
-function build-simulation() {
+build_simulation() {
 	g++ -o $SIMULATION_BIN $SRC_FILES $SIMULATION $COMPILER_ARGS
 }
 
-function build-analysis() {
+build_analysis() {
 	g++ -o $ANALYSIS_BIN $SRC_FILES $ANALYSIS $COMPILER_ARGS
 }
 
-function build-test() {
+build_test() {
 	g++ -o $TEST_BIN $SRC_FILES $TEST $COMPILER_ARGS
 }
 
-function print-help() {
-	echo "Synthax: ./build.sh <analysis|simulation|test|build-analysis|build-simulation|build-test>"
-	echo ""
-	echo analysis - Build and run analysis
-	echo build-analysis - Build analysis
-	echo simulation - Build and run simulation
-	echo build-simulation - Build main program
-	echo test - Build and run tests
-	echo build-test - Build tests
+simulation() {
+	$(build_simulation) && ./${SIMULATION_BIN}
+}
+
+analysis() {
+	$(build_analysis) && ./${ANALYSIS_BIN}
+}
+
+test() {
+	$(build_test) && ./${TEST_BIN}
+}
+
+print_help() {
+	echo 'Synthax: ./build.sh [analysis|simulation|test|build_analysis|build_simulation|build_test]'
+	echo ''
+	echo '*no argumets* - Build and run simulation and analysis'
+	echo 'analysis - Build and run analysis'
+	echo 'build_analysis - Build analysis'
+	echo 'simulation - Build and run simulation'
+	echo 'build_simulation - Build main program'
+	echo 'test - Build and run tests'
+	echo 'build_test - Build tests'
 }
 
 # Make sure out directory exists
@@ -50,21 +63,20 @@ if ! [ -d $OUT_DIR ]; then
 fi
 
 # Executes command
-if [ "$1" == "analysis" ] || [ $# -eq 0 ]; then
-	$(build-analysis) \
-	&& ./${ANALYSIS_BIN}
-elif [ "$1" == "build-analysis" ]; then
-	$(build-analysis)
+if [ $# -eq 0 ]; then
+	simulation && analysis
+elif [ "$1" == "analysis" ] || [ $# -eq 0 ]; then
+	analysis
+elif [ "$1" == "build_analysis" ]; then
+	build_analysis
 elif [ "$1" == "simulation" ]; then
-	$(build-simulation) \
-	&& ./${SIMULATION_BIN}
-elif [ "$1" == "build-simulation" ]; then
-	$(build-simulation)
+	simulation
+elif [ "$1" == "build_simulation" ]; then
+	build_simulation
 elif [ "$1" == "test" ]; then
-	$(build-test) \
-	&& ./${TEST_BIN}
-elif [ "$1" == "build-test" ]; then
-	$(build-test)
+	test
+elif [ "$1" == "build_test" ]; then
+	build_test
 else
-	print-help
+	print_help
 fi
