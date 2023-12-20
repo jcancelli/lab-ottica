@@ -40,53 +40,53 @@ int main() {
   std::vector<Particle> eventParticles;
   double phi, theta, pulse;
   double px, py, pz;
-  TH1D particleTypesHisto(                                              //
-      "particle-types-distribution",                                    //
-      "Particle types distribution",                                    //
-      10, 0, 10),                                                       //
-      zenithDist(                                                       //
-          "zenith-distribution",                                        //
-          "Zenith distribution",                                        //
-          1000, 0., M_PI),                                              //
-      azimuthDist(                                                      //
-          "azimuth-distribution",                                       //
-          "Azimuth distribution",                                       //
-          1000, 0., PI2),                                               //
-      pulseDist(                                                        //
-          "pulse-distribution",                                         //
-          "Pulse distribution",                                         //
-          100, 0, 11),                                                  //
-      traversePulseDist(                                                //
-          "traverse-pulse-distribution",                                //
-          "Traverse pulse distribution",                                //
-          100, 0., 10.),                                                //
-      particleEnergyDist(                                               //
-          "particle-energy-distribution",                               //
-          "Particle energy distribution",                               //
-          1000, 0., 10.),                                               //
-      invMassDist(                                                      //
-          "invariant-mass-distribution",                                //
-          "Invariant mass distribution",                                //
-          1000, 0, 10),                                                 //
-      invMassDiffChargeDist(                                            //
-          "invariant-mass-discordant-charge-distribution",              //
-          "Invariant mass discrodant charge distribution",              //
-          1000, 0, 10),                                                 //
-      invMassSameChargeDist(                                            //
-          "invariant-mass-concordant-charge-distribution",              //
-          "Invariant mass concordant charge distribution",              //
-          1000, 0, 10),                                                 //
-      invMassPioneKaoneDiscordantDist(                                  //
-          "invariant-mass-discordant-charge-pione-kaone-distribution",  //
-          "Invariant mass discordant charge pione kaone distribution",  //
-          1000, 0, 10),                                                 //
-      invMassPioneKaoneConcordantDist(                                  //
-          "invariant-mass-concordant-charge-pione-kaone-distribution",  //
-          "Invariant mass concordant charge pione kaone distribution",  //
-          1000, 0, 10),                                                 //
-      invMassSibDecayDist(                                              //
-          "invariant-mass-siblings-distribution",                       //
-          "Invariant mass siblings distribution",                       //
+  TH1D particleTypesHisto(                            //
+      "particle-types",                               //
+      "Particle types",                               //
+      10, 0, 10),                                     //
+      zenithDist(                                     //
+          "zenith",                                   //
+          "Zenith",                                   //
+          1000, 0., M_PI),                            //
+      azimuthDist(                                    //
+          "azimuth",                                  //
+          "Azimuth",                                  //
+          1000, 0., PI2),                             //
+      pulseDist(                                      //
+          "pulse",                                    //
+          "Pulse",                                    //
+          1000, 0, 11),                               //
+      traversePulseDist(                              //
+          "traverse-pulse",                           //
+          "Traverse pulse",                           //
+          1000, 0., 10.),                             //
+      particleEnergyDist(                             //
+          "particle-energy",                          //
+          "Particle energy",                          //
+          1000, 0., 10.),                             //
+      invMassDist(                                    //
+          "inv-mass",                                 //
+          "Inv. mass",                                //
+          1000, 0, 10),                               //
+      invMassDiffChargeDist(                          //
+          "inv-mass-discordant",                      //
+          "Inv. mass discrodant charge",              //
+          1000, 0, 10),                               //
+      invMassSameChargeDist(                          //
+          "inv-mass-concordant",                      //
+          "Inv. mass concordant charge",              //
+          1000, 0, 10),                               //
+      invMassPioneKaoneDiscordantDist(                //
+          "inv-mass-discordant-pk",                   //
+          "Inv. mass pione kaone discordant charge",  //
+          1000, 0, 10),                               //
+      invMassPioneKaoneConcordantDist(                //
+          "inv-mass-concordant-pk",                   //
+          "Inv. mass pione kaone concordant charge",  //
+          1000, 0, 10),                               //
+      invMassSibDecayDist(                            //
+          "inv-mass-siblings",                        //
+          "Inv. mass siblings",                       //
           1000, 0, 7);
 
   // init histos' weights
@@ -202,6 +202,7 @@ int main() {
   invMassPioneKaoneConcordantDist.Write();
   invMassSibDecayDist.Write();
   saveFile.Close();
+  std::cout << "Saved to " << SAVE_FILE << "\n";
 }
 
 inline const char* determineParticleType() {
