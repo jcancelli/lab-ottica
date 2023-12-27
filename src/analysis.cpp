@@ -7,6 +7,7 @@
 
 #include <filesystem>
 #include <iostream>
+#include <memory>
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
@@ -29,10 +30,11 @@ std::unordered_map<const char*, TH1D*> histos{
     {"inv-mass-concordant-pk", nullptr},
     {"inv-mass-siblings", nullptr}};
 
-void fit(TH1D* dist, const char* fitFunc, double xMin, double xMax);
+TF1 fit(TH1D* dist, const char* fitFunc, double xMin, double xMax);
 void loadHistos(TFile& file);
 void checkHistosEntries();
 void checkParticleTypesDistribution();
+void extractKStar();
 void saveToPdf();
 
 enum ParticleIndex : int {
@@ -58,6 +60,7 @@ int main() {
   fit(histos["azimuth"], "pol0", 0, M_PI * 2);
   section("Pulse fit");
   fit(histos["pulse"], "expo", 0, 7);
+  extractKStar();
   saveToPdf();
   file.Close();
 }
@@ -147,9 +150,10 @@ void checkParticleTypesDistribution() {
       .print();
 }
 
-void fit(TH1D* dist, const char* fitFormula, double xMin, double xMax) {
-  TF1 fitFunc("fit-func", fitFormula, xMin, xMax);
-  dist->Fit("fit-func", "Q");
+TF1 fit(TH1D* dist, const char* fitFormula, double xMin, double xMax) {
+  auto fitFuncName = concat(dist->GetName(), "-fit");
+  TF1 fitFunc(fitFuncName.c_str(), fitFormula, xMin, xMax);
+  dist->Fit(fitFuncName.c_str(), "Q");
   std::cout << "Function\t\t" << fitFormula << "\n";
   std::cout << "Parameters:\n";
   for (int i = 0; i < fitFunc.GetNpar(); i++) {
@@ -159,6 +163,36 @@ void fit(TH1D* dist, const char* fitFormula, double xMin, double xMax) {
   std::cout << "Reduced chi squared\t"
             << (fitFunc.GetChisquare() / fitFunc.GetNDF()) << "\n";
   std::cout << "Fit probability\t\t" << fitFunc.GetProb() << "\n";
+  return fitFunc;
+}
+
+void extractKStar() {
+  section("Extract k*");
+  TH1D* diffDiscConc = (TH1D*)histos["inv-mass-discordant"]->Clone(
+      "diff-inv-mass-discordant-concordant");
+  diffDiscConc->Add(histos["inv-mass-concordant"], -1);
+  TH1D* diffPKDiscConc = (TH1D*)histos["inv-mass-discordant-pk"]->Clone(
+      "diff-inv-mass-pk-discordant-concordant");
+  diffPKDiscConc->Add(histos["inv-mass-concordant-pk"], -1);
+  std::cout << "\n-- Fit difference inv. mass discordant concordant\n";
+  TF1 fitDiscConc = fit(diffDiscConc, "gaus", 0, 10);
+  std::cout
+      << "\n-- Fit difference inv. mass discordant concordant pione-kaone "
+         "pairs\n";
+  TF1 fitPKDiscConc = fit(diffPKDiscConc, "gaus", 0, 10);
+  auto avgMass =
+      (fitDiscConc.GetParameter("Mean") + fitPKDiscConc.GetParameter("Mean")) /
+      2.;
+  auto avgWidth = (fitDiscConc.GetParameter("Sigma") +
+                   fitPKDiscConc.GetParameter("Sigma")) /
+                  2.;
+  std::cout << "\n-- Average K* values\n";
+  Table<const char*, double, double>()
+      .headers({"", "EXPECTED", "FOUND"})
+      .row("Mass", 0.89166, avgMass)
+      .row("Width", 0.05, avgWidth)
+      .spacing(7)
+      .print();
 }
 
 void saveToPdf() {
