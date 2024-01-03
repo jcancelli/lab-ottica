@@ -88,7 +88,7 @@ int main() {
       invMassSibDecayDist(                                                   //
           "inv-mass-siblings",                                               //
           "Inv. mass siblings;Invariant mass;Entries",                       //
-          1000, 0, 7);
+          1000, 0, 2);
   auto* typesXAxis = particleTypesHisto.GetXaxis();
   typesXAxis->SetBinLabel(1, "pione+");
   typesXAxis->SetBinLabel(2, "pione-");
